@@ -1,32 +1,57 @@
 const display = document.getElementById("display");
 
 let firstNumber = null;
-
 let operation = null;
+let secondNumber = "";
+let waitingForSecondNumber = false;
 
 
 // Add number to display
 function appendNumber(number) {
 
-    display.value += number;
+    // If result was just calculated and user enters a new number
+    if (waitingForSecondNumber && operation === null) {
+        firstNumber = null;
+        secondNumber = "";
+        waitingForSecondNumber = false;
+    }
 
+    // Don't allow multiple decimal points
+    if (number === "." && secondNumber.includes(".")) {
+        return;
+    }
+
+    // Don't allow 00 at the beginning
+    if (secondNumber === "0" && number !== ".") {
+        secondNumber = "";
+    }
+
+    secondNumber += number;
+
+    if (firstNumber !== null && operation !== null) {
+        display.value = firstNumber + " " + operation + " " + secondNumber;
+    } else {
+        display.value = secondNumber;
+    }
 }
 
 
 // Choose + - * /
 function chooseOperation(selectedOperation) {
 
-    if (display.value === "") {
+    if (secondNumber === "") {
         return;
     }
 
-    firstNumber = parseFloat(display.value);
+    firstNumber = parseFloat(secondNumber);
 
     operation = selectedOperation;
 
-    display.value = display.value + " " + selectedOperation + " ";
+    secondNumber = "";
 
+    waitingForSecondNumber = true;
 
+    display.value = firstNumber + " " + selectedOperation;
 }
 
 
@@ -39,14 +64,30 @@ function clearDisplay() {
 
     operation = null;
 
+    secondNumber = "";
+
+    waitingForSecondNumber = false;
 }
 
 
 // Delete last character
 function deleteLast() {
 
-    display.value = display.value.slice(0, -1);
+    if (secondNumber !== "") {
 
+        secondNumber = secondNumber.slice(0, -1);
+
+    }
+
+    if (firstNumber !== null && operation !== null) {
+
+        display.value =
+            firstNumber + " " + operation + " " + secondNumber;
+
+    } else {
+
+        display.value = secondNumber;
+    }
 }
 
 
@@ -56,17 +97,14 @@ async function calculate() {
     if (
         firstNumber === null ||
         operation === null ||
-        display.value === ""
+        secondNumber === ""
     ) {
-
         return;
-
     }
 
-    const secondNumber = parseFloat(display.value);
+    const secondNumberValue = parseFloat(secondNumber);
 
     let endpoint;
-
 
     if (operation === "+") {
 
@@ -84,6 +122,9 @@ async function calculate() {
 
         endpoint = "divide";
 
+    } else {
+
+        return;
     }
 
 
@@ -99,11 +140,8 @@ async function calculate() {
                 },
 
                 body: JSON.stringify({
-
                     number1: firstNumber,
-
-                    number2: secondNumber
-
+                    number2: secondNumberValue
                 })
             }
         );
@@ -114,7 +152,6 @@ async function calculate() {
             display.value = "Error";
 
             return;
-
         }
 
 
@@ -122,18 +159,20 @@ async function calculate() {
 
         display.value = result;
 
-
+        // Store result for next calculation
         firstNumber = result;
 
         operation = null;
 
+        secondNumber = String(result);
+
+        waitingForSecondNumber = true;
+
 
     } catch (error) {
 
-        console.error(error);
+        console.error("Calculator error:", error);
 
         display.value = "Server Error";
-
     }
-
 }
