@@ -113,15 +113,18 @@ jobs:
             aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
             aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
             aws configure set region "$AWS_REGION"
-            
-            aws ecr get-login-password --region ap-southeast-2 | \
-            docker login --username AWS --password-stdin \
-            671830949187.dkr.ecr.ap-southeast-2.amazonaws.com
+
+            aws ecr get-login-password \
+              --region "$AWS_REGION" | \
+              docker login \
+              --username AWS \
+              --password-stdin "$ECR_REGISTRY"
+
 
             echo "===== Pull latest image ====="
 
-            docker pull \
-              671830949187.dkr.ecr.ap-southeast-2.amazonaws.com/calculator-app:latest
+            docker pull "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+
 
             echo "===== Stop old container ====="
 
@@ -134,11 +137,12 @@ jobs:
 
 
             echo "===== Run new container ====="
-                    
-             docker run -d \
-             --name calculator-app \
-             -p 8081:8081 \
-              671830949187.dkr.ecr.ap-southeast-2.amazonaws.com/calculator-app:latest
+
+            docker run -d \
+              --name "$CONTAINER_NAME" \
+              -p "$HOST_PORT:$CONTAINER_PORT" \
+              "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
+
 
             echo "===== Deployment completed ====="
 
