@@ -123,14 +123,14 @@ jobs:
             docker pull \
               671830949187.dkr.ecr.ap-southeast-2.amazonaws.com/calculator-app:latest
 
-#            echo "===== Stop old container ====="
-#
-#            docker stop "$CONTAINER_NAME" || true
-#
-#
-#            echo "===== Remove old container ====="
-#
-#            docker rm "$CONTAINER_NAME" || true
+            echo "===== Stop old container ====="
+
+            docker stop "$CONTAINER_NAME" || true
+
+
+            echo "===== Remove old container ====="
+
+            docker rm "$CONTAINER_NAME" || true
 
 
             echo "===== Run new container ====="
