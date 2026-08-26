@@ -1,40 +1,40 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: calculator-app
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: calculator-app
-  template:
-    metadata:
-      labels:
-        app: calculator-app
-    spec:
-      containers:
-        - name: calculator-app
-          image: 671830949187.dkr.ecr.ap-southeast-2.amazonaws.com/calculator-app
-          ports:
-            - containerPort: 8081
-          resources:
-            requests:
-              cpu: "250m"
-              memory: "256Mi"
-            limits:
-              cpu: "500m"
-              memory: "512Mi"
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-app-service
-spec:
-  type: LoadBalancer
-  selector:
-    app: calculator-app
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8081
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: calculator-app
+#spec:
+#  replicas: 2
+#  selector:
+#    matchLabels:
+#      app: calculator-app
+#  template:
+#    metadata:
+#      labels:
+#        app: calculator-app
+#    spec:
+#      containers:
+#        - name: calculator-app
+#          image: 671830949187.dkr.ecr.ap-southeast-2.amazonaws.com/calculator-app
+#          ports:
+#            - containerPort: 8081
+#          resources:
+#            requests:
+#              cpu: "250m"
+#              memory: "256Mi"
+#            limits:
+#              cpu: "500m"
+#              memory: "512Mi"
+#
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: my-app-service
+#spec:
+#  type: LoadBalancer
+#  selector:
+#    app: calculator-app
+#  ports:
+#    - protocol: TCP
+#      port: 80
+#      targetPort: 8081
