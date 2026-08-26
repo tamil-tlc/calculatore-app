@@ -147,4 +147,3 @@ jobs:
             echo "===== Deployment completed ====="
 
             docker ps
-
