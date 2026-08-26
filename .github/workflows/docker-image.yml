@@ -128,7 +128,6 @@ jobs:
 
             docker stop "$CONTAINER_NAME" || true
 
-
             echo "===== Remove old container ====="
 
             docker rm "$CONTAINER_NAME" || true
