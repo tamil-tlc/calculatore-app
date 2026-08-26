@@ -126,14 +126,14 @@ jobs:
             docker pull "$ECR_REGISTRY/$ECR_REPOSITORY:latest"
 
 
-            echo "===== Stop old container ====="
-
-            docker stop "$CONTAINER_NAME" || true
-
-
-            echo "===== Remove old container ====="
-
-            docker rm "$CONTAINER_NAME" || true
+#            echo "===== Stop old container ====="
+#
+#            docker stop "$CONTAINER_NAME" || true
+#
+#
+#            echo "===== Remove old container ====="
+#
+#            docker rm "$CONTAINER_NAME" || true
 
 
             echo "===== Run new container ====="
